@@ -175,3 +175,8 @@ body .detail-photo { background: transparent; }
     border-color: #3a3a3a;
     color: #8a8a8a;
 }
+/* Hide the browser's built-in password reveal icon (Edge); the site has its own */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
