@@ -1,0 +1,67 @@
+{% extends "shop/admin/base.html" %}
+{% load static %}
+{% block admin_title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<link rel="stylesheet" href="{% static 'css/admin-content.css' %}?v=4">
+
+<div class="ac-header">
+    <div>
+        <h1>{{ title }}</h1>
+        <p>{% if kind == "banner" %}Upload a wide picture and write the text that shows on it.{% else %}Upload a picture and give it a name.{% endif %}</p>
+    </div>
+    <a class="ac-btn ac-btn-line" href="{% url cancel_url %}"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="ac-form" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}<div class="ac-msg ac-msg-error">{{ form.non_field_errors }}</div>{% endif %}
+
+    {% for field in form %}
+        {% if field.name == "image" %}
+        <div class="ac-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <div class="ac-preview {% if kind == 'banner' %}ac-preview-wide{% endif %}" id="acPreview">
+                {% if instance and instance.image %}<img src="{{ instance.image.url }}" alt="">{% else %}<span><i class="bi bi-image"></i> Picture preview</span>{% endif %}
+            </div>
+            {{ field }}
+            {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+            {% for e in field.errors %}<em class="ac-err">{{ e }}</em>{% endfor %}
+        </div>
+        {% elif field.field.widget.input_type == "checkbox" %}
+        <div class="ac-field ac-check">
+            <label for="{{ field.id_for_label }}">{{ field }} <span>{{ field.label }}</span></label>
+            {% for e in field.errors %}<em class="ac-err">{{ e }}</em>{% endfor %}
+        </div>
+        {% else %}
+        <div class="ac-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+            {% for e in field.errors %}<em class="ac-err">{{ e }}</em>{% endfor %}
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <div class="ac-form-actions">
+        <button class="ac-btn" type="submit">{{ button_text }}</button>
+        <a class="ac-btn ac-btn-line" href="{% url cancel_url %}">Cancel</a>
+    </div>
+</form>
+
+<script>
+(function () {
+    var input = document.querySelector('input[type="file"]');
+    var box = document.getElementById('acPreview');
+    if (!input || !box) return;
+    input.addEventListener('change', function () {
+        var f = input.files && input.files[0];
+        if (!f || !/^image\//.test(f.type)) return;
+        var img = box.querySelector('img') || box.appendChild(document.createElement('img'));
+        var span = box.querySelector('span'); if (span) span.remove();
+        img.src = URL.createObjectURL(f);
+    });
+})();
+</script>
+{% endblock %}

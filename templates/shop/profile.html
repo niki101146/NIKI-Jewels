@@ -1,0 +1,748 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}NIKI Jewels{% endblock %}
+    </title>
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <!-- =====================================================
+         YOUR CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+<style>
+
+/* =========================================================
+   PROFILE PAGE
+========================================================= */
+
+.profile-page {
+    background: var(--zy-hover);
+    min-height: 80vh;
+    padding: 55px 0 80px;
+    color: var(--zy-text);
+}
+
+.profile-container {
+    width: min(1000px, 92%);
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   PROFILE HEADER
+========================================================= */
+
+.profile-heading {
+    background: var(--zy-surface);
+    border: 1px solid var(--zy-line);
+    padding: 35px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.035);
+}
+
+.profile-label {
+    color: var(--zy-gold-text);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.profile-heading h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 38px;
+    font-weight: 400;
+}
+
+.profile-heading p {
+    margin: 8px 0 0;
+    color: var(--zy-muted);
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.profile-avatar {
+    width: 78px;
+    height: 78px;
+    min-width: 78px;
+    border-radius: 50%;
+
+    background: #111111;
+    color: #ffffff;
+
+    border: 2px solid var(--zy-gold);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Georgia, serif;
+    font-size: 30px;
+}
+
+
+/* =========================================================
+   PROFILE CARD
+========================================================= */
+
+.profile-card {
+    background: var(--zy-surface);
+    border: 1px solid var(--zy-line);
+    margin-bottom: 22px;
+    padding: 32px 38px;
+    box-shadow: 0 6px 25px rgba(0,0,0,.025);
+}
+
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding-bottom: 22px;
+    margin-bottom: 25px;
+
+    border-bottom: 1px solid var(--zy-line);
+}
+
+.section-heading > span {
+    color: var(--zy-gold-text);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 23px;
+    font-weight: 400;
+}
+
+.section-heading p {
+    margin: 4px 0 0;
+    color: #888888;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-full {
+    grid-column: 1 / -1;
+}
+
+.profile-field label {
+    margin-bottom: 8px;
+
+    color: var(--zy-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.profile-input {
+    width: 100%;
+    min-height: 48px;
+
+    padding: 12px 14px;
+
+    border: 1px solid var(--zy-line);
+    background: var(--zy-hover);
+
+    color: var(--zy-text);
+    font-size: 14px;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition: .25s ease;
+}
+
+.profile-input:focus {
+    background: var(--zy-surface);
+    border-color: var(--zy-gold);
+
+    box-shadow:
+        0 0 0 3px rgba(156,117,53,.08);
+}
+
+textarea.profile-input {
+    min-height: 105px;
+    resize: vertical;
+}
+
+.profile-input[readonly] {
+    background: var(--zy-hover);
+    color: var(--zy-muted);
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ERRORS
+========================================================= */
+
+.profile-error {
+    color: #ec786f;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.profile-save {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.save-profile-btn {
+    min-height: 50px;
+    padding: 0 30px;
+
+    border: 1px solid #111111;
+
+    background: #111111;
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.save-profile-btn:hover {
+    background: var(--zy-gold);
+    border-color: var(--zy-gold);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .profile-page {
+        padding: 35px 0 55px;
+    }
+
+    .profile-heading {
+        padding: 25px;
+    }
+
+    .profile-heading h1 {
+        font-size: 31px;
+    }
+
+    .profile-avatar {
+        width: 65px;
+        height: 65px;
+        min-width: 65px;
+        font-size: 25px;
+    }
+
+    .profile-card {
+        padding: 25px 20px;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-full {
+        grid-column: auto;
+    }
+
+    .profile-save {
+        display: block;
+    }
+
+    .save-profile-btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .profile-heading {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+    }
+
+    .profile-heading h1 {
+        font-size: 27px;
+    }
+
+    .profile-heading p {
+        font-size: 13px;
+    }
+
+    .profile-card {
+        padding: 22px 16px;
+    }
+
+    .section-heading h2 {
+        font-size: 20px;
+    }
+
+}
+
+</style>
+    <link rel="stylesheet" href="{% static 'css/theme-black-gold.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/mobile-fixes.css' %}?v=8">
+</head>
+<body>
+
+<div class="profile-page">
+
+    <div class="profile-container">
+
+
+        <!-- =================================================
+             PROFILE HEADER
+        ================================================== -->
+
+        <div class="profile-heading">
+
+            <div>
+
+                <div class="profile-label">
+                    NIKI Jewels
+                </div>
+
+                <h1>
+                    My Profile
+                </h1>
+
+                <p>
+                    Manage your personal information and delivery details.
+                </p>
+
+            </div>
+
+
+            <div class="profile-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PROFILE FORM
+        ================================================== -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- =================================================
+                 PERSONAL INFORMATION
+            ================================================== -->
+
+            <div class="profile-card">
+
+                <div class="section-heading">
+
+                    <span>01</span>
+
+                    <div>
+
+                        <h2>
+                            Personal Information
+                        </h2>
+
+                        <p>
+                            Your basic personal information
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-grid">
+
+
+                    <!-- FIRST NAME -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            First Name
+                        </label>
+
+                        {{ user_form.first_name }}
+
+                        {% if user_form.first_name.errors %}
+                            <small class="profile-error">
+                                {{ user_form.first_name.errors }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Last Name
+                        </label>
+
+                        {{ user_form.last_name }}
+
+                        {% if user_form.last_name.errors %}
+                            <small class="profile-error">
+                                {{ user_form.last_name.errors }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Email Address
+                        </label>
+
+                        {{ user_form.email }}
+
+                        {% if user_form.email.errors %}
+                            <small class="profile-error">
+                                {{ user_form.email.errors }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Phone Number
+                        </label>
+
+                        {{ profile_form.phone }}
+
+                        {% if profile_form.phone.errors %}
+                            <small class="profile-error">
+                                {{ profile_form.phone.errors }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DATE OF BIRTH -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Date of Birth
+                        </label>
+
+                        {{ profile_form.date_of_birth }}
+
+                    </div>
+
+
+                    <!-- GENDER -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Gender
+                        </label>
+
+                        {{ profile_form.gender }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DELIVERY ADDRESS
+            ================================================== -->
+
+            <div class="profile-card">
+
+                <div class="section-heading">
+
+                    <span>02</span>
+
+                    <div>
+
+                        <h2>
+                            Delivery Address
+                        </h2>
+
+                        <p>
+                            Address used for jewellery delivery
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-grid">
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="profile-field profile-full">
+
+                        <label>
+                            Address
+                        </label>
+
+                        {{ profile_form.address }}
+
+                        {% if profile_form.address.errors %}
+                            <small class="profile-error">
+                                {{ profile_form.address.errors }}
+                            </small>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- CITY -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            City
+                        </label>
+
+                        {{ profile_form.city }}
+
+                    </div>
+
+
+                    <!-- STATE -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            State
+                        </label>
+
+                        {{ profile_form.state }}
+
+                    </div>
+
+
+                    <!-- PINCODE -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Pincode
+                        </label>
+
+                        {{ profile_form.pincode }}
+
+                    </div>
+
+
+                    <!-- COUNTRY -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Country
+                        </label>
+
+                        {{ profile_form.country }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACCOUNT INFORMATION
+            ================================================== -->
+
+            <div class="profile-card">
+
+                <div class="section-heading">
+
+                    <span>03</span>
+
+                    <div>
+
+                        <h2>
+                            Account Information
+                        </h2>
+
+                        <p>
+                            Your NIKI Jewels account details
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-grid">
+
+
+                    <!-- USERNAME -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            class="profile-input"
+                            value="{{ request.user.username }}"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <!-- MEMBER SINCE -->
+
+                    <div class="profile-field">
+
+                        <label>
+                            Member Since
+                        </label>
+
+                        <input
+                            type="text"
+                            class="profile-input"
+                            value="{{ request.user.date_joined|date:'d M Y' }}"
+                            readonly
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SAVE
+            ================================================== -->
+
+            <div class="profile-save">
+
+                <button
+                    type="submit"
+                    class="save-profile-btn"
+                >
+                    SAVE CHANGES
+                    <i class="bi bi-check2"></i>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

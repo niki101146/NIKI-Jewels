@@ -1,0 +1,583 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}NIKI Jewels{% endblock %}
+    </title>
+
+    <meta name="color-scheme" content="dark light">
+
+    <!-- Apply the saved light/dark choice before first paint (no flash). Default = dark. -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem("niki-theme");
+                if (t === "light" || t === "dark") {
+                    document.documentElement.setAttribute("data-bs-theme", t);
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <!-- =====================================================
+         YOUR CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=20261030-slider"
+    >
+
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=20261030-img">
+<link rel="icon" type="image/png" href="{% static 'images/niki-jewels-logo.png' %}">
+<style>.niki-logo-image{display:block;border-radius:8px;width:56px;height:56px;max-width:none;object-fit:contain;flex-shrink:0} @media(max-width:991px){.niki-logo-image{width:44px;height:44px}}</style>
+    <link rel="stylesheet" href="{% static 'css/theme-black-gold.css' %}?v=20261030-img">
+    <link rel="stylesheet" href="{% static 'css/header-theme.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/mobile-fixes.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/zyra-updates.css' %}?v=1">
+</head>
+
+<body class="{% block body_class %}{% if not is_admin_user %}has-mobile-bottom-nav{% endif %}{% endblock %}">
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+{% block header %}
+<header class="site-header">
+
+    <!-- Dark overlay behind mobile drawer (inside header so it sits under the drawer) -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <nav class="main-navbar">
+
+        <div class="navbar-container">
+
+
+            <!-- =================================================
+                 TOP NAVIGATION ROW
+            ================================================== -->
+
+            <div class="navbar-top-row">
+
+
+                <!-- =================================================
+                     MOBILE MENU BUTTON (left side)
+                ================================================== -->
+
+                <button
+                    class="mobile-menu-button"
+                    id="menuOpenBtn"
+                    type="button"
+                    aria-label="Open menu"
+                    aria-controls="mainNavigation"
+                    aria-expanded="false"
+                >
+                    <i class="bi bi-list"></i>
+                </button>
+
+
+                <!-- =================================================
+                     LOGO
+                ================================================== -->
+
+                <a
+    href="{% url 'home' %}"
+    class="brand-logo"
+>
+    <img class="niki-logo-image" src="{% static 'images/niki-jewels-logo.png' %}" alt="NIKI Jewels logo">
+    <span class="brand-wordmark"><span class="brand-main">NIKI Jewels</span></span>
+</a>
+
+                   
+
+
+                <!-- =================================================
+                     NAVIGATION
+                ================================================== -->
+
+                <div
+                    class="navbar-navigation"
+                    id="mainNavigation"
+                >
+
+                    <!-- Drawer header (mobile only) -->
+                    <div class="drawer-header">
+                        <span class="drawer-title">NIKI Jewels</span>
+                        <button
+                            class="drawer-close"
+                            id="menuCloseBtn"
+                            type="button"
+                            aria-label="Close menu"
+                        >
+                            <span class="drawer-close-label">Close</span><i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <a
+                        href="{% url 'home' %}"
+                        class="navbar-link"
+                    >
+                        Home
+                    </a>
+
+
+                    <a
+                        href="{% url 'collections' %}"
+                        class="navbar-link"
+                    >
+                        Collections
+                    </a>
+
+
+                    <a
+                        href="{% url 'about' %}"
+                        class="navbar-link"
+                    >
+                        About Us
+                    </a>
+
+
+                    <a
+                        href="{% url 'contact' %}"
+                        class="navbar-link"
+                    >
+                        Contact Us
+                    </a>
+
+                </div>
+
+
+                <!-- =================================================
+                     SEARCH (same row as the navigation)
+                ================================================== -->
+
+                <form
+                    method="GET"
+                    action="{% url 'collections' %}"
+                    class="navbar-search"
+                >
+
+                    <input
+    type="text"
+    id="navbarSearchInput"
+    name="q"
+    placeholder="Search jewellery..."
+    value="{{ request.GET.q|default:'' }}"
+    aria-label="Search jewellery"
+    autocomplete="off"
+>
+
+                    <button
+                        type="submit"
+                        title="Search"
+                    >
+
+                        <i class="bi bi-search"></i>
+
+                    </button>
+
+                </form>
+
+
+                <!-- =================================================
+                     RIGHT SIDE ICONS
+                ================================================== -->
+
+                <div class="navbar-actions">
+
+
+                    {% if is_admin_user %}
+
+                        <!-- ADMIN: dashboard + logout (no cart / wishlist) -->
+
+                        <a
+                            href="{% url 'admin_dashboard' %}"
+                            class="navbar-action"
+                            title="Admin Dashboard"
+                        >
+
+                            <i class="bi bi-speedometer2"></i>
+
+                        </a>
+
+                        <a
+                            href="{% url 'user_logout' %}"
+                            class="navbar-action"
+                            title="Logout"
+                        >
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                        </a>
+
+                    {% else %}
+
+                        <!-- WISHLIST -->
+
+                        <a
+                            href="{% url 'wishlist' %}"
+                            class="navbar-action"
+                            title="Wishlist"
+                            aria-label="Wishlist, {{ wishlist_count }} items"
+                        >
+
+                            <i class="bi bi-heart"></i>
+                            {% if wishlist_count %}<span class="navbar-count" aria-hidden="true">{{ wishlist_count }}</span>{% endif %}
+
+                        </a>
+
+
+                        <!-- CART -->
+
+                        <a
+                            href="{% url 'cart' %}"
+                            class="navbar-action"
+                            title="Cart"
+                            aria-label="Cart, {{ cart_count }} items"
+                        >
+
+                            <i class="bi bi-cart"></i>
+                            {% if cart_count %}<span class="navbar-count" aria-hidden="true">{{ cart_count }}</span>{% endif %}
+
+                        </a>
+
+
+                        <!-- ACCOUNT / LOGIN -->
+
+                        {% if user.is_authenticated %}
+
+                            <a
+                                href="{% url 'account' %}"
+                                class="navbar-action"
+                                title="Account"
+                            >
+
+                                <i class="bi bi-person"></i>
+
+                            </a>
+
+                        {% else %}
+
+                            <a
+                                href="{% url 'login' %}"
+                                class="navbar-action"
+                                title="Login"
+                            >
+
+                                <i class="bi bi-person"></i>
+
+                            </a>
+
+                        {% endif %}
+
+                    {% endif %}
+
+
+                </div>
+
+                <!-- =================================================
+                     LIGHT / DARK MODE
+                ================================================== -->
+
+                <button
+                    class="theme-toggle"
+                    type="button"
+                    data-theme-toggle
+                    aria-label="Switch to light mode"
+                    title="Switch to light mode"
+                >
+                    <i class="bi bi-sun-fill theme-icon-sun" aria-hidden="true"></i>
+                    <i class="bi bi-moon-stars-fill theme-icon-moon" aria-hidden="true"></i>
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    </nav>
+
+</header>
+{% endblock header %}
+
+
+<!-- =========================================================
+     PAGE CONTENT
+========================================================= -->
+
+<main>
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+{% block footer %}
+<footer class="site-footer">
+
+    <div class="container footer-inner">
+
+        <div class="row">
+
+
+            <!-- ABOUT -->
+
+            <div class="col-md-4 footer-brand">
+
+                <h4>
+                    NIKI Jewels
+                </h4>
+
+                <p>
+                    Timeless jewellery crafted for your
+                    special moments.
+                </p>
+
+            </div>
+
+
+            <!-- QUICK LINKS -->
+
+            <div class="col-md-4 footer-links">
+
+                <h5>
+                    Quick Links
+                </h5>
+
+                <p>
+
+                    <a
+                        href="{% url 'home' %}"
+                        class="footer-link"
+                    >
+                        Home
+                    </a>
+
+                </p>
+
+                <p>
+
+                    <a
+                        href="{% url 'collections' %}"
+                        class="footer-link"
+                    >
+                        Collections
+                    </a>
+
+                </p>
+
+                <p>
+
+                    <a
+                        href="{% url 'about' %}"
+                        class="footer-link"
+                    >
+                        About Us
+                    </a>
+
+                </p>
+
+                <p>
+
+                    <a
+                        href="{% url 'contact' %}"
+                        class="footer-link"
+                    >
+                        Contact Us
+                    </a>
+
+                </p>
+
+            </div>
+
+
+            <!-- CONTACT -->
+
+            <div class="col-md-4 footer-contact">
+
+                <h5>
+                    Contact
+                </h5>
+
+                <p>
+                    <a
+                href="https://www.google.com/maps/dir//Kuttynadar+Jewellery,+862Q%2B4HP,+Kanchiracode+Vellivilagom,+Unnamalaikadai,+Tamil+Nadu+629155/@8.2199138,77.1893039,11.4z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3b04550ac03921c1:0x30484a8159e0c90!2m2!1d77.2389676!2d8.3003685?entry=ttu&g_ep=EgoyMDI2MDkyOC4wIKXMDSoASAFQAw%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                    <i class="bi bi-geo-alt"></i>
+
+                    Kanchiracode Vellivilagom,<br>
+                    Unnamalaikadai,<br>
+                    Tamil Nadu 629155
+                </a>
+
+                </p>
+
+                <p>
+
+                    <i class="bi bi-envelope"></i>
+
+                    nikildanniki@gmail.com
+
+                </p>
+
+                <p>
+
+                    <i class="bi bi-telephone"></i>
+
+                    +91 78458 77124
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <hr>
+
+
+        <div class="footer-copyright">
+
+            © 2026 NIKI Jewels.
+            All Rights Reserved.
+
+        </div>
+
+    </div>
+
+</footer>
+{% endblock footer %}
+{% block bottom_nav %}
+{% if not is_admin_user %}
+<nav class="mobile-bottom-nav" aria-label="Shopping navigation">
+                        <!-- WISHLIST -->
+
+                        <a
+                            href="{% url 'wishlist' %}"
+                            class="navbar-action mobile-bottom-action"
+                            title="Wishlist"
+                            aria-label="Wishlist, {{ wishlist_count }} items"
+                        >
+
+                            <i class="bi bi-heart"></i><span class="mobile-bottom-label">Favourites</span>
+                            {% if wishlist_count %}<span class="navbar-count" aria-hidden="true">{{ wishlist_count }}</span>{% endif %}
+
+                        </a>
+
+
+                        <!-- CART -->
+
+                        <a
+                            href="{% url 'cart' %}"
+                            class="navbar-action mobile-bottom-action"
+                            title="Cart"
+                            aria-label="Cart, {{ cart_count }} items"
+                        >
+
+                            <i class="bi bi-cart"></i><span class="mobile-bottom-label">Cart</span>
+                            {% if cart_count %}<span class="navbar-count" aria-hidden="true">{{ cart_count }}</span>{% endif %}
+
+                        </a>
+
+
+                        <!-- ACCOUNT / LOGIN -->
+
+                        {% if user.is_authenticated %}
+
+                            <a
+                                href="{% url 'account' %}"
+                                class="navbar-action mobile-bottom-action"
+                                title="Account"
+                            >
+
+                                <i class="bi bi-person"></i><span class="mobile-bottom-label">Account</span>
+
+                            </a>
+
+                        {% else %}
+
+                            <a
+                                href="{% url 'login' %}"
+                                class="navbar-action mobile-bottom-action"
+                                title="Login"
+                            >
+
+                                <i class="bi bi-person"></i><span class="mobile-bottom-label">Account</span>
+
+                            </a>
+
+                        {% endif %}
+
+
+</nav>
+{% endif %}
+{% endblock bottom_nav %}
+
+
+
+<!-- =========================================================
+     BOOTSTRAP JAVASCRIPT
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- =========================================================
+     YOUR JAVASCRIPT
+========================================================= -->
+
+<script src="{% static 'js/theme.js' %}?v=1"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/search.js' %}?v=2"></script>
+<script src="{% static 'js/password-toggle.js' %}?v=1"></script>
+
+
+</body>
+
+</html>

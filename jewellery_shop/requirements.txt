@@ -1,0 +1,15 @@
+asgiref==3.11.1
+Django==6.0.7
+pillow==12.3.0
+psycopg[binary]==3.2.9
+sqlparse==0.5.5
+tzdata==2026.2
+Django>=6.1
+python-dotenv
+gunicorn
+whitenoise
+psycopg2-binary
+dj-database-url
+Pillow
+cloudinary
+django-cloudinary-storage

@@ -1,0 +1,602 @@
+{% extends "shop/base.html" %}
+
+{% block title %}My Orders | NIKI Jewels{% endblock %}
+
+{% block content %}
+
+<style>
+
+.ord-page {
+    background: var(--zy-page);
+    min-height: 80vh;
+    padding: 56px 20px 100px;
+}
+
+.ord-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+/* ---------- Header ---------- */
+
+.ord-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 26px;
+    color: var(--zy-text-2);
+    font-size: 14px;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.ord-back:hover { color: var(--zy-gold-text); }
+
+.ord-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 34px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--zy-line);
+}
+
+.ord-label {
+    margin-bottom: 10px;
+    color: var(--zy-gold-text);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.ord-title {
+    margin: 0 0 8px;
+    color: var(--zy-text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 44px;
+    font-weight: 400;
+}
+
+.ord-sub {
+    margin: 0;
+    color: var(--zy-muted);
+    font-size: 15px;
+}
+
+.ord-count {
+    padding: 8px 16px;
+    border: 1px solid var(--zy-gold);
+    border-radius: 999px;
+    color: var(--zy-gold-text);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.ord-notice {
+    margin: 0 0 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: #243116;
+    color: #9cd289;
+    font-size: 13px;
+}
+
+/* ---------- Order card ---------- */
+
+.ord-card {
+    margin-bottom: 28px;
+    background: var(--zy-surface);
+    border: 1px solid var(--zy-line);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .08);
+    transition: box-shadow .25s ease, border-color .25s ease;
+}
+
+.ord-card:hover {
+    border-color: var(--zy-gold);
+    box-shadow: 0 14px 38px rgba(0, 0, 0, .16);
+}
+
+.ord-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 18px 24px;
+    background: var(--zy-hover);
+    border-bottom: 1px solid var(--zy-line);
+}
+
+.ord-meta {
+    display: flex;
+    gap: 34px;
+    flex-wrap: wrap;
+}
+
+.ord-meta-item small {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--zy-muted);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.ord-meta-item strong {
+    color: var(--zy-text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.ord-badge {
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--zy-gold);
+    background: rgba(212, 175, 55, .12);
+    color: var(--zy-gold-text);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.ord-badge.is-cancelled {
+    border-color: #6b2a2a;
+    background: rgba(217, 130, 130, .12);
+    color: #d98282;
+}
+
+.ord-badge.is-shipped,
+.ord-badge.is-delivered {
+    border-color: #2f6b4a;
+    background: rgba(118, 229, 203, .10);
+    color: #5fcfa5;
+}
+
+/* ---------- Progress tracker ---------- */
+
+.ord-track {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 24px 24px 8px;
+}
+
+.ord-step {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    color: var(--zy-placeholder);
+    font-size: 12px;
+    letter-spacing: .5px;
+}
+
+.ord-step::before {
+    content: "";
+    position: absolute;
+    top: 13px;
+    left: -50%;
+    width: 100%;
+    height: 2px;
+    background: var(--zy-line);
+}
+
+.ord-step:first-child::before { display: none; }
+
+.ord-dot {
+    position: relative;
+    z-index: 1;
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid var(--zy-line);
+    background: var(--zy-surface);
+    font-size: 13px;
+}
+
+.ord-step.done { color: var(--zy-text-2); }
+.ord-step.done::before { background: var(--zy-gold); }
+.ord-step.done .ord-dot {
+    border-color: var(--zy-gold);
+    background: var(--zy-gold);
+    color: #0a0a0a;
+}
+
+.ord-cancelled {
+    margin: 22px 24px 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #6b2a2a;
+    background: rgba(217, 130, 130, .08);
+    color: #d98282;
+    font-size: 13px;
+}
+
+/* ---------- Items ---------- */
+
+.ord-items { padding: 12px 24px 4px; }
+
+.ord-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--zy-line);
+}
+
+.ord-item:last-child { border-bottom: 0; }
+
+.ord-item-img {
+    flex: 0 0 84px;
+    width: 84px;
+    height: 84px;
+    border-radius: 10px;
+    border: 1px solid var(--zy-line);
+    background: var(--zy-hover);
+    object-fit: cover;
+}
+
+.ord-item-info { flex: 1; min-width: 0; }
+
+.ord-item-name {
+    margin: 0 0 6px;
+    color: var(--zy-text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    overflow-wrap: anywhere;
+}
+
+.ord-item-qty {
+    color: var(--zy-muted);
+    font-size: 13px;
+}
+
+.ord-item-price {
+    color: var(--zy-text);
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ---------- Footer: delivery / payment / total ---------- */
+
+.ord-foot {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto;
+    gap: 24px;
+    align-items: start;
+    padding: 20px 24px;
+    border-top: 1px solid var(--zy-line);
+    background: var(--zy-hover);
+}
+
+.ord-foot h4 {
+    margin: 0 0 8px;
+    color: var(--zy-muted);
+    font-family: inherit;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.ord-foot p {
+    margin: 0;
+    color: var(--zy-text-2);
+    font-size: 13.5px;
+    line-height: 1.6;
+}
+
+.ord-total { text-align: right; }
+
+.ord-total strong {
+    display: block;
+    color: var(--zy-text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    font-weight: 400;
+}
+
+.ord-actions {
+    padding: 0 24px 20px;
+    background: var(--zy-hover);
+}
+
+.ord-cancel-btn {
+    min-height: 42px;
+    padding: 9px 18px;
+    border: 1px solid #6b2a2a;
+    border-radius: 8px;
+    background: transparent;
+    color: #d98282;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+
+.ord-cancel-btn:hover { background: #6b2a2a; color: #fff; }
+
+/* ---------- Empty ---------- */
+
+.ord-empty {
+    padding: 80px 30px;
+    text-align: center;
+    background: var(--zy-surface);
+    border: 1px solid var(--zy-line);
+    border-radius: 14px;
+}
+
+.ord-empty-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--zy-hover);
+    color: var(--zy-gold-text);
+    font-size: 28px;
+}
+
+.ord-empty h2 {
+    margin-bottom: 12px;
+    color: var(--zy-text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.ord-empty p { margin-bottom: 24px; color: var(--zy-muted); font-size: 14px; }
+
+.ord-shop-btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 8px;
+    background: var(--zy-gold);
+    color: #0a0a0a;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-decoration: none;
+}
+
+.ord-shop-btn:hover { background: var(--zy-gold-light); color: #0a0a0a; }
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 767px) {
+
+    .ord-page { padding: 30px 12px 70px; }
+    .ord-title { font-size: 34px; }
+
+    .ord-top { padding: 14px 16px; }
+    .ord-meta { gap: 22px; }
+
+    .ord-track { padding: 20px 8px 6px; }
+    .ord-step { font-size: 10.5px; letter-spacing: 0; }
+    .ord-dot { width: 24px; height: 24px; font-size: 11px; }
+    .ord-step::before { top: 11px; }
+
+    .ord-cancelled { margin: 16px 16px 0; }
+    .ord-items { padding: 8px 16px 2px; }
+
+    .ord-item { gap: 12px; }
+    .ord-item-img { flex-basis: 64px; width: 64px; height: 64px; }
+    .ord-item-name { font-size: 15px; }
+    .ord-item-price { font-size: 14px; }
+
+    .ord-foot {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .ord-foot > div:first-child { grid-column: 1 / -1; }
+    .ord-total { grid-column: 1 / -1; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+    .ord-total strong { font-size: 22px; }
+    .ord-actions { padding: 0 16px 16px; }
+}
+
+</style>
+
+
+<div class="ord-page">
+
+    <div class="ord-wrap">
+
+        <a href="{% url 'account' %}" class="ord-back">
+            <i class="bi bi-arrow-left"></i>
+            Back to Account
+        </a>
+
+
+        <div class="ord-head">
+
+            <div>
+                <div class="ord-label">NIKI Jewels</div>
+                <h1 class="ord-title">My Orders</h1>
+                <p class="ord-sub">View and track your jewellery orders.</p>
+            </div>
+
+            {% if orders %}
+                <span class="ord-count">{{ orders|length }} order{{ orders|length|pluralize }}</span>
+            {% endif %}
+
+        </div>
+
+
+        {% for message in messages %}<p class="ord-notice" role="status">{{ message }}</p>{% endfor %}
+
+
+        {% if orders %}
+
+            {% for order in orders %}
+
+            <article class="ord-card">
+
+                <!-- Top: order no / date / status -->
+                <div class="ord-top">
+
+                    <div class="ord-meta">
+                        <div class="ord-meta-item">
+                            <small>Order</small>
+                            <strong>#{{ order.order_number|default:order.id }}</strong>
+                        </div>
+
+                        {% if order.display_date %}
+                        <div class="ord-meta-item">
+                            <small>Placed on</small>
+                            <strong>{{ order.display_date }}</strong>
+                        </div>
+                        {% endif %}
+
+                        <div class="ord-meta-item">
+                            <small>Total</small>
+                            <strong>₹{{ order.total_amount|floatformat:2 }}</strong>
+                        </div>
+                    </div>
+
+                    <span class="ord-badge is-{{ order.status }}">{{ order.get_status_display }}</span>
+
+                </div>
+
+
+                <!-- Progress -->
+                {% if order.status == 'cancelled' %}
+
+                    <div class="ord-cancelled">
+                        <i class="bi bi-x-circle"></i> This order has been cancelled.
+                    </div>
+
+                {% else %}
+
+                    <ol class="ord-track" aria-label="Order progress">
+                        <li class="ord-step done">
+                            <div class="ord-dot"><i class="bi bi-check-lg"></i></div>
+                            Placed
+                        </li>
+                        <li class="ord-step {% if order.status == 'confirmed' or order.status == 'packed' or order.status == 'shipped' or order.status == 'delivered' %}done{% endif %}">
+                            <div class="ord-dot"><i class="bi bi-check-lg"></i></div>
+                            Confirmed
+                        </li>
+                        <li class="ord-step {% if order.status == 'packed' or order.status == 'shipped' or order.status == 'delivered' %}done{% endif %}">
+                            <div class="ord-dot"><i class="bi bi-check-lg"></i></div>
+                            Packed
+                        </li>
+                        <li class="ord-step {% if order.status == 'shipped' or order.status == 'delivered' %}done{% endif %}">
+                            <div class="ord-dot"><i class="bi bi-check-lg"></i></div>
+                            Shipped
+                        </li>
+                        <li class="ord-step {% if order.status == 'delivered' %}done{% endif %}">
+                            <div class="ord-dot"><i class="bi bi-check-lg"></i></div>
+                            Delivered
+                        </li>
+                    </ol>
+
+                {% endif %}
+
+
+                <!-- Items -->
+                <div class="ord-items">
+
+                    {% for item in order.items.all %}
+
+                        <div class="ord-item">
+
+                            {% if item.product and item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product_name }}" class="ord-item-img">
+                            {% else %}
+                                <div class="ord-item-img"></div>
+                            {% endif %}
+
+                            <div class="ord-item-info">
+                                <h3 class="ord-item-name">{{ item.product_name }}</h3>
+                                <div class="ord-item-qty">Quantity: {{ item.quantity }}</div>
+                            </div>
+
+                            <div class="ord-item-price">₹{{ item.total_price|floatformat:2 }}</div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- Delivery / payment / total -->
+                <div class="ord-foot">
+
+                    <div>
+                        <h4>Delivery details</h4>
+                        {% if order.checkout_address %}
+                            <p>
+                                {% if order.checkout_name %}<strong>{{ order.checkout_name }}</strong><br>{% endif %}
+                                {{ order.checkout_address }}{% if order.city %}, {{ order.city }}{% endif %}{% if order.state %}, {{ order.state }}{% endif %}{% if order.pincode %} - {{ order.pincode }}{% endif %}
+                                {% if order.checkout_phone %}<br><i class="bi bi-telephone"></i> {{ order.checkout_phone }}{% endif %}
+                            </p>
+                        {% else %}
+                            <p>Awaiting store confirmation.</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <h4>Payment</h4>
+                        <p><i class="bi bi-cash-coin"></i> Cash on Delivery</p>
+                    </div>
+
+                    <div class="ord-total">
+                        <h4>Order total</h4>
+                        <strong>₹{{ order.total_amount|floatformat:2 }}</strong>
+                    </div>
+
+                </div>
+
+
+                {% if order.status == 'pending' %}
+                <div class="ord-actions">
+                    <form method="post" action="{% url 'cancel_customer_order' order.id %}" onsubmit="return confirm('Cancel this order?');">
+                        {% csrf_token %}
+                        <button class="ord-cancel-btn" type="submit"><i class="bi bi-x-circle"></i> Cancel order</button>
+                    </form>
+                </div>
+                {% endif %}
+
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="ord-empty">
+
+                <div class="ord-empty-icon"><i class="bi bi-bag"></i></div>
+
+                <h2>No Orders Yet</h2>
+
+                <p>Your jewellery orders will appear here after you complete a purchase.</p>
+
+                <a href="{% url 'collections' %}" class="ord-shop-btn">EXPLORE COLLECTIONS</a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

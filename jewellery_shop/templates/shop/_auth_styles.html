@@ -1,0 +1,156 @@
+<style>
+
+.auth-wrap {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: var(--zy-page);
+}
+
+/* light / dark switch (there is no navbar on this page) */
+.auth-theme-toggle {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+    background: var(--zy-surface);
+    border: 1px solid var(--zy-gold);
+    padding: 45px 40px;
+    text-align: center;
+    box-shadow: 0 12px 40px var(--zy-shadow);
+}
+
+.auth-mark {
+    display: inline-block;
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    color: var(--zy-text);
+    text-decoration: none;
+}
+
+.auth-mark:hover {
+    color: var(--zy-text);
+}
+
+.auth-mark span {
+    color: var(--zy-gold-text);
+}
+
+.auth-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 29px;
+    margin: 15px 0 8px;
+    color: var(--zy-text);
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: var(--zy-muted);
+    margin-bottom: 30px;
+}
+
+.auth-messages {
+    margin-bottom: 20px;
+}
+
+.auth-messages p {
+    background: var(--zy-surface-2);
+    border: 1px solid var(--zy-gold);
+    color: var(--zy-text);
+    padding: 10px;
+    font-size: 13px;
+    text-align: left;
+}
+
+.field-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.field-group label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    color: var(--zy-gold-text);
+}
+
+.field-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 12px;
+    background: var(--zy-surface-2);
+    color: var(--zy-text);
+    border: 1px solid var(--zy-gold);
+    font-size: 15px;
+    outline: none;
+}
+
+.field-group input:focus {
+    border-color: var(--zy-gold-light);
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.28);
+}
+
+.field-group.has-error input {
+    border-color: #b00020;
+}
+
+.field-error {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: #ff5c79;
+}
+
+.auth-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--zy-gold);
+    color: #111111;
+    border: 1px solid var(--zy-gold);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.auth-submit:hover {
+    background: var(--zy-gold-light);
+    border-color: var(--zy-gold-light);
+}
+
+.auth-footnote {
+    margin-top: 25px;
+    color: var(--zy-muted);
+    font-size: 14px;
+}
+
+.auth-footnote a {
+    color: var(--zy-gold-text);
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 35px 22px;
+    }
+}
+
+
+.auth-links-row { display:flex; justify-content:flex-end; margin:-6px 0 18px; }
+.auth-links-row a { color:var(--zy-gold-text); font-size:13px; text-decoration:none; }
+.auth-links-row a:hover { text-decoration:underline; }
+.auth-messages p.is-success { border-color:#2f5a3a; }
+.auth-note { margin:-14px 0 22px; font-size:12.5px; color:var(--zy-muted); text-align:left; line-height:1.5; }
+</style>

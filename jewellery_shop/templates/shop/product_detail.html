@@ -1,0 +1,29 @@
+{% extends "shop/base.html" %}
+{% block title %}{{ product.name }} | NIKI Jewels{% endblock %}
+{% block content %}
+<section class="product-detail-page">
+ <a class="detail-back" href="{% url 'collections' %}">← Back to collections</a>
+ <div class="product-detail-grid">
+  <div class="detail-photo">{% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">{% else %}<span>No image available</span>{% endif %}</div>
+  <div class="detail-info">
+   <p class="detail-category">{{ product.category.name }}</p>
+   <h1>{{ product.name }}</h1>
+   <p class="detail-price">₹{{ product.price|floatformat:2 }}</p>
+   <p class="detail-stock">{% if product.is_available and product.stock > 0 %}In stock{% else %}Currently unavailable{% endif %}</p>
+   <dl><div><dt>Material</dt><dd>{{ product.get_material_display }}</dd></div><div><dt>For</dt><dd>{{ product.get_gender_display }}</dd></div></dl>
+   {% if product.description %}<div class="detail-description"><h2>About this piece</h2>{{ product.description|linebreaks }}</div>{% endif %}
+   {% if not is_admin_user %}
+   <div class="detail-actions">
+    {% if product.is_available and product.stock > 0 %}<a class="detail-buy" href="{% url 'add_to_cart' product.id %}">Add to Cart</a>{% else %}<button class="detail-buy" disabled>Unavailable</button>{% endif %}
+    {% if user.is_authenticated %}
+    <form method="post" action="{% if is_saved %}{% url 'remove_from_wishlist' product.id %}{% else %}{% url 'add_to_wishlist' product.id %}{% endif %}">{% csrf_token %}<button class="detail-save" type="submit">{% if is_saved %}♥ Remove from favourites{% else %}♡ Add to favourites{% endif %}</button></form>
+    {% else %}<a class="detail-save" href="{% url 'login' %}?next={{ request.path|urlencode }}">♡ Sign in to save</a>{% endif %}
+   </div>{% endif %}
+  </div>
+ </div>
+</section>
+
+{% include "shop/_recommended.html" with items=recommended_products label="SIMILAR PIECES" heading="You May Also Like" %}
+{% endblock %}
+
+{% block footer %}{% endblock footer %}

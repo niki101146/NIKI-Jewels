@@ -1,0 +1,141 @@
+{% extends "shop/admin/base.html" %}
+{% load static %}
+{% block admin_title %}Settings{% endblock %}
+
+{% block admin_content %}
+<link rel="stylesheet" href="{% static 'css/admin-content.css' %}?v=4">
+
+<style>
+.st-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:20px; }
+.st-card { padding:20px; border:1px solid var(--zy-line); border-radius:14px; background:var(--zy-surface); }
+.st-card h2 { margin:0 0 4px; font:500 22px Georgia,serif; color:var(--zy-text); }
+.st-card > p { margin:0 0 16px; color:var(--zy-muted,#9a9a9a); font-size:13.5px; }
+.st-card input[type=password], .st-card input[type=search] {
+    width:100%; min-height:42px; padding:9px 12px; border:1px solid var(--zy-line); border-radius:8px;
+    background:var(--zy-hover); color:var(--zy-text); font-size:16px; }
+.st-card input:focus { outline:2px solid var(--zy-gold,#c9a24d); outline-offset:1px; }
+.st-pass { max-width:460px; }
+.st-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:16px; }
+.st-stat { padding:12px; border:1px solid var(--zy-line); border-radius:10px; background:var(--zy-hover); text-align:center; }
+.st-stat b { display:block; font:600 24px Georgia,serif; color:var(--zy-gold-text,#e0bd63); }
+.st-stat span { font-size:12px; color:var(--zy-muted,#9a9a9a); }
+.st-filter { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.st-filter form { display:flex; flex:1 1 220px; gap:8px; margin:0; }
+.st-tabs { display:flex; gap:6px; flex-wrap:wrap; }
+.st-wrap { overflow-x:auto; border:1px solid var(--zy-line); border-radius:10px; }
+.st-table { width:100%; min-width:640px; border-collapse:collapse; font-size:13.5px; }
+.st-table th { text-align:left; padding:10px 12px; font:700 11.5px Arial,sans-serif; letter-spacing:.8px; text-transform:uppercase;
+    color:var(--zy-gold-text,#e0bd63); background:var(--zy-hover); white-space:nowrap; }
+.st-table td { padding:10px 12px; border-top:1px solid var(--zy-line); color:var(--zy-text); vertical-align:middle; }
+.st-muted { color:var(--zy-muted,#9a9a9a); }
+.st-pager { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; font-size:13px; }
+@media (min-width:992px) { .st-grid { grid-template-columns:minmax(0,380px) minmax(0,1fr); align-items:start; } }
+@media (max-width:480px) { .st-stats { grid-template-columns:minmax(0,1fr); } }
+</style>
+
+<div class="ac-header">
+    <div>
+        <h1>Settings</h1>
+        <p>See who has logged in and change the admin password.</p>
+    </div>
+</div>
+
+{% for message in messages %}
+    <div class="ac-msg ac-msg-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+
+<div class="st-grid">
+
+    <!-- CHANGE ADMIN PASSWORD -->
+    <section class="st-card">
+        <h2>Change admin password</h2>
+        <p>Signed in as <strong>{{ request.user.username }}</strong>.</p>
+
+        {% if password_error %}<div class="ac-msg ac-msg-error">{{ password_error }}</div>{% endif %}
+
+        <form method="POST" class="st-pass" action="{% url 'admin_settings' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="change_password">
+
+            <div class="ac-field">
+                <label for="current_password">Current password</label>
+                <input type="password" id="current_password" name="current_password" autocomplete="current-password" required>
+            </div>
+            <div class="ac-field">
+                <label for="new_password1">New password</label>
+                <input type="password" id="new_password1" name="new_password1" autocomplete="new-password" required>
+            </div>
+            <div class="ac-field">
+                <label for="new_password2">Confirm new password</label>
+                <input type="password" id="new_password2" name="new_password2" autocomplete="new-password" required>
+            </div>
+
+            <div class="ac-form-actions">
+                <button type="submit" class="ac-btn"><i class="bi bi-key"></i> Change password</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- USER LOGINS -->
+    <section class="st-card">
+        <h2>User logins</h2>
+        <p>Last login time for every account (India time).</p>
+
+        <div class="st-stats">
+            <div class="st-stat"><b>{{ total_users }}</b><span>Total accounts</span></div>
+            <div class="st-stat"><b>{{ recent_users }}</b><span>Logged in, last 7 days</span></div>
+            <div class="st-stat"><b>{{ never_users }}</b><span>Never logged in</span></div>
+        </div>
+
+        <div class="st-filter">
+            <form method="GET" action="{% url 'admin_settings' %}">
+                <input type="search" name="q" value="{{ q }}" placeholder="Search username or e-mail">
+                <input type="hidden" name="show" value="{{ show }}">
+                <button class="ac-btn ac-btn-sm" type="submit"><i class="bi bi-search"></i></button>
+            </form>
+            <div class="st-tabs">
+                <a class="ac-btn ac-btn-sm {% if show != 'all' %}ac-btn-line{% endif %}" href="?show=all{% if q %}&q={{ q|urlencode }}{% endif %}">All</a>
+                <a class="ac-btn ac-btn-sm {% if show != 'recent' %}ac-btn-line{% endif %}" href="?show=recent{% if q %}&q={{ q|urlencode }}{% endif %}">Last 7 days</a>
+                <a class="ac-btn ac-btn-sm {% if show != 'never' %}ac-btn-line{% endif %}" href="?show=never{% if q %}&q={{ q|urlencode }}{% endif %}">Never</a>
+            </div>
+        </div>
+
+        <div class="st-wrap">
+            <table class="st-table">
+                <thead>
+                    <tr><th>Username</th><th>Role</th><th>Last login</th><th>Joined</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                {% for u in users_page %}
+                    <tr>
+                        <td>
+                            {{ u.username }}
+                            {% if u.email %}<br><span class="st-muted">{{ u.email }}</span>{% endif %}
+                        </td>
+                        <td>{{ u.role_label }}</td>
+                        <td>{% if u.last_login_text %}{{ u.last_login_text }}{% else %}<span class="st-muted">Never</span>{% endif %}</td>
+                        <td class="st-muted">{{ u.joined_text }}</td>
+                        <td><span class="ac-badge {% if u.is_active %}on{% else %}off{% endif %}">{% if u.is_active %}Active{% else %}Disabled{% endif %}</span></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5" class="st-muted">No accounts found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if users_page.paginator.num_pages > 1 %}
+        <div class="st-pager">
+            {% if users_page.has_previous %}
+                <a class="ac-btn ac-btn-sm ac-btn-line" href="?page={{ users_page.previous_page_number }}&show={{ show }}{% if q %}&q={{ q|urlencode }}{% endif %}">Previous</a>
+            {% else %}<span></span>{% endif %}
+            <span class="st-muted">Page {{ users_page.number }} of {{ users_page.paginator.num_pages }}</span>
+            {% if users_page.has_next %}
+                <a class="ac-btn ac-btn-sm ac-btn-line" href="?page={{ users_page.next_page_number }}&show={{ show }}{% if q %}&q={{ q|urlencode }}{% endif %}">Next</a>
+            {% else %}<span></span>{% endif %}
+        </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

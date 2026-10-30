@@ -1,0 +1,9 @@
+Django>=6.1
+python-dotenv
+gunicorn
+whitenoise
+psycopg2-binary
+dj-database-url
+Pillow
+cloudinary
+django-cloudinary-storage

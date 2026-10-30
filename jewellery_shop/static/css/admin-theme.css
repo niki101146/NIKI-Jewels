@@ -1,0 +1,75 @@
+/* NIKI Jewels - admin light / dark mode (theme variables come from theme-black-gold.css) */
+
+/* toggle buttons */
+.admin-theme-btn { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.admin-theme-btn .theme-icon-moon { display:none; }
+[data-bs-theme="light"] .admin-theme-btn .theme-icon-sun { display:none; }
+[data-bs-theme="light"] .admin-theme-btn .theme-icon-moon { display:inline-block; }
+
+.admin-mobile-header .admin-theme-btn { margin-left:auto; font-size:20px !important; }
+body .sidebar-bottom .theme-link { width:100%; margin-bottom:8px; background:transparent; border:0; font:inherit; color:inherit; text-align:left; cursor:pointer; }
+body .sidebar-bottom .theme-link .theme-label-dark { display:none; }
+[data-bs-theme="light"] body .sidebar-bottom .theme-link .theme-label-dark { display:inline; }
+[data-bs-theme="light"] body .sidebar-bottom .theme-link .theme-label-light { display:none; }
+
+/* hard-coded dark colours in the old admin styles -> follow the theme */
+body .admin-table { border-color:var(--zy-line); }
+body .admin-table th { background:var(--zy-hover); color:var(--zy-text); border-bottom-color:var(--zy-line); }
+body .admin-table td { border-bottom-color:var(--zy-line); }
+.dashboard-header p, .stat-label { color:var(--zy-muted); }
+
+[data-bs-theme="light"] .ac-msg-success, [data-bs-theme="light"] .dz-msg { background:#e7f5ea; border-color:#9fd0a9; color:#1f6a31; }
+[data-bs-theme="light"] .ac-msg-error, [data-bs-theme="light"] .dz-msg.error { background:#fdecee; border-color:#e5a3aa; color:#9a2432; }
+[data-bs-theme="light"] .ac-badge.on { background:#e7f5ea; border-color:#9fd0a9; color:#1f6a31; }
+[data-bs-theme="light"] .ac-badge.off { background:#eee; border-color:#ccc; color:#666; }
+[data-bs-theme="light"] .ac-btn-danger, [data-bs-theme="light"] .dz-btn.del { border-color:#d98a92; color:#b0303f; }
+[data-bs-theme="light"] .ac-btn-danger:hover { background:#fdecee; color:#b0303f; }
+[data-bs-theme="light"] .dz-stock { background:#e7f5ea; border-color:#9fd0a9; color:#1f6a31; }
+[data-bs-theme="light"] .dz-stock.low { background:#fff4dc; border-color:#e5c274; color:#7a5200; }
+[data-bs-theme="light"] .dz-stock.out { background:#fdecee; border-color:#e5a3aa; color:#9a2432; }
+[data-bs-theme="light"] .dz-tile.alert { border-color:#d98a92; }
+[data-bs-theme="light"] .dz-ico.gold   { color:#8a6a10; }
+[data-bs-theme="light"] .dz-ico.green  { color:#217a3a; }
+[data-bs-theme="light"] .dz-ico.blue   { color:#1f56a8; }
+[data-bs-theme="light"] .dz-ico.red    { color:#b0303f; }
+[data-bs-theme="light"] .dz-ico.purple { color:#6a3fb0; }
+[data-bs-theme="light"] .admin-mobile-header { box-shadow:0 2px 10px rgba(0,0,0,.06); }
+
+html.theme-animating, html.theme-animating *, html.theme-animating *::before, html.theme-animating *::after {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease !important;
+}
+body .sidebar-bottom .theme-link { justify-content:flex-start; }
+
+/* sidebar: Logout stays pinned at the bottom (never pushed off-screen) */
+body .admin-sidebar { overflow-y: auto; }
+body .admin-sidebar .sidebar-bottom {
+    position: sticky; bottom: 0; z-index: 2; margin-top: auto;
+    padding: 10px 0 6px; background: var(--zy-surface); border-top: 1px solid var(--zy-line);
+}
+body .admin-sidebar .sidebar-bottom .sidebar-link { margin-bottom: 4px; }
+@media (min-width: 851px) {
+    body .admin-sidebar { padding-top: 20px; padding-bottom: 8px; }
+    body .admin-sidebar .admin-logo { padding-bottom: 12px; }
+    body .admin-sidebar .sidebar-menu { margin-top: 4px; }
+    body .admin-sidebar .sidebar-link { padding: 10px 15px; margin-bottom: 3px; }
+    body .admin-sidebar .sidebar-divider { display: none; }
+}
+@media (max-width: 767px) {
+    body .admin-sidebar { padding-top: 14px; padding-bottom: 8px; }
+    body .admin-sidebar .admin-menu-close { margin-bottom: 8px; min-height: 40px; }
+    body .admin-sidebar .sidebar-menu { gap: 3px; margin-top: 8px; }
+    body .admin-sidebar .sidebar-link { padding: 10px 14px; margin-bottom: 0; }
+    body .admin-sidebar .sidebar-divider { display: none; }
+    body .admin-sidebar .sidebar-bottom { padding-top: 8px; }
+}
+
+/* Logout button - clearly visible at the bottom of the side menu */
+body .admin-sidebar .sidebar-bottom .logout-link {
+    justify-content: flex-start; border: 1px solid #b5424f; color: #e8707c; background: transparent; margin-bottom: 0;
+}
+body .admin-sidebar .sidebar-bottom .logout-link:hover { background: rgba(181,66,79,.14); color: #f08590; }
+[data-bs-theme="light"] body .admin-sidebar .sidebar-bottom .logout-link { color: #b0303f; border-color: #d98a92; }
+@media (max-width: 767px) {
+    body .admin-sidebar { display: flex; flex-direction: column; }
+    body .admin-sidebar .sidebar-bottom { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+}

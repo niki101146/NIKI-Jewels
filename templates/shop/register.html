@@ -1,0 +1,267 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Register - NIKI Jewels{% endblock %}
+
+{% block content %}
+
+<style>
+
+.auth-wrap {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: var(--zy-surface);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+    background: var(--zy-surface);
+    border: 1px solid var(--zy-line);
+    padding: 45px 40px;
+    text-align: center;
+}
+
+.auth-mark {
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    color: var(--zy-text);
+}
+
+.auth-mark span {
+    color: var(--zy-text-2);
+}
+
+.auth-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 29px;
+    margin: 15px 0 8px;
+    color: var(--zy-text);
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: var(--zy-muted);
+    margin-bottom: 30px;
+}
+
+.auth-messages {
+    margin-bottom: 20px;
+}
+
+.auth-messages p {
+    background: var(--zy-page);
+    border: 1px solid var(--zy-line);
+    padding: 10px;
+    font-size: 13px;
+    text-align: left;
+}
+
+.field-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.field-group label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    color: var(--zy-text-2);
+}
+
+.field-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 12px;
+    border: 1px solid var(--zy-line);
+    font-size: 15px;
+    outline: none;
+}
+
+.field-group input:focus {
+    border-color: #000000;
+}
+
+.field-group.has-error input {
+    border-color: #b00020;
+}
+
+.field-error {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: #ff5c79;
+}
+
+.auth-submit {
+    width: 100%;
+    padding: 14px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.auth-submit:hover {
+    background: #333333;
+}
+
+.auth-footnote {
+    margin-top: 25px;
+    color: var(--zy-muted);
+    font-size: 14px;
+}
+
+.auth-footnote a {
+    color: var(--zy-text);
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 35px 22px;
+    }
+}
+
+</style>
+
+
+<div class="auth-wrap">
+
+    <div class="auth-card">
+
+        <div class="auth-mark">
+            ✦ NIKI <span>Jewels</span>
+        </div>
+
+        <h1 class="auth-title">
+            Create Account
+        </h1>
+
+        <p class="auth-subtitle">
+            Register to shop, save favourites and track orders.
+        </p>
+
+
+        {% if form.non_field_errors %}
+
+            <div class="auth-messages">
+
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST" action="{% url 'register' %}">
+
+            {% csrf_token %}
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <div class="field-group{% if form.username.errors %} has-error{% endif %}">
+
+                <label for="id_username">Username</label>
+
+                <input
+                    type="text"
+                    id="id_username"
+                    name="username"
+                    {% if form.username.value %}value="{{ form.username.value }}"{% endif %}
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                    required
+                >
+
+                {% for error in form.username.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+            <div class="field-group{% if form.email.errors %} has-error{% endif %}">
+
+                <label for="id_email">Email</label>
+
+                <input
+                    type="email"
+                    id="id_email"
+                    name="email"
+                    {% if form.email.value %}value="{{ form.email.value }}"{% endif %}
+                    placeholder="yourname@gmail.com"
+                    autocomplete="email"
+                    required
+                >
+
+                {% for error in form.email.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+            <div class="field-group{% if form.password1.errors %} has-error{% endif %}">
+
+                <label for="id_password1">Create Password</label>
+
+                <input
+                    type="password"
+                    id="id_password1"
+                    name="password1"
+                    placeholder="At least 8 characters"
+                    autocomplete="new-password"
+                    required
+                >
+
+                {% for error in form.password1.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+            <div class="field-group{% if form.password2.errors %} has-error{% endif %}">
+
+                <label for="id_password2">Confirm Password</label>
+
+                <input
+                    type="password"
+                    id="id_password2"
+                    name="password2"
+                    placeholder="Re-enter your password"
+                    autocomplete="new-password"
+                    required
+                >
+
+                {% for error in form.password2.errors %}
+                    <p class="field-error">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+            <button type="submit" class="auth-submit">
+                Register
+            </button>
+
+        </form>
+
+        <p class="auth-footnote">
+            Already have an account?
+            <a href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Delete Product - NIKI Jewels{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .delete-wrap {
+        min-height: 70vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 20px;
+    }
+
+    .delete-card {
+        width: 100%;
+        max-width: 500px;
+        border: 1px solid var(--zy-line);
+        padding: 40px;
+        text-align: center;
+    }
+
+    .delete-card h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        margin-top: 0;
+    }
+
+    .product-name {
+        font-size: 20px;
+        margin: 20px 0;
+    }
+
+    .warning {
+        color: var(--zy-muted);
+        margin-bottom: 30px;
+    }
+
+    .delete-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        padding: 13px 25px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .cancel-btn {
+        background: var(--zy-page);
+        color: var(--zy-text);
+        padding: 13px 25px;
+        text-decoration: none;
+    }
+
+</style>
+
+
+<div class="delete-wrap">
+
+    <div class="delete-card">
+
+        <h1>
+            Delete Product
+        </h1>
+
+        <p class="product-name">
+            {{ product.name }}
+        </p>
+
+        <p class="warning">
+            Are you sure you want to delete this product?
+            This action cannot be undone.
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="delete-btn"
+            >
+                Yes, Delete
+            </button>
+
+            <a
+                href="{% url 'admin_dashboard' %}"
+                class="cancel-btn"
+            >
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

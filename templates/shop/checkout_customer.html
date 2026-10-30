@@ -1,0 +1,39 @@
+{% extends "shop/base.html" %}
+{% block title %}Customer Details | NIKI Jewels{% endblock %}
+{% block content %}
+{% load static %}
+<section class="checkout-customer-page">
+ <a class="detail-back" href="{% url 'cart' %}">← Back to cart</a>
+ <div class="checkout-customer-card">
+  <p class="checkout-eyebrow">CHECKOUT</p>
+  <h1>Customer details</h1>
+  <p class="checkout-intro">Enter your contact information and delivery address.</p>
+  {% for message in messages %}<p class="checkout-notice" role="status">{{ message }}</p>{% endfor %}
+  <form method="post" novalidate>
+   {% csrf_token %}
+   <input type="hidden" name="checkout_token" value="{{ checkout_token }}">
+   {% for error in form.non_field_errors %}<p class="checkout-error" role="alert">{{ error }}</p>{% endfor %}
+   {% for field in form %}
+   {% if field.name == "address" %}<h2 class="checkout-address-title">Delivery address</h2>{% endif %}
+   <div class="checkout-field">
+    <label for="{{ field.id_for_label }}">{{ field.label }} {% if field.field.required %}<span aria-hidden="true">*</span>{% endif %}</label>
+    {{ field }}
+    {% for error in field.errors %}<p class="checkout-error" role="alert">{{ error }}</p>{% endfor %}
+    {% if field.name == "mobile" %}<p id="mobileValidationError" class="checkout-error" role="alert" hidden>Please enter a valid mobile number. Use 10 digits starting with 6, 7, 8 or 9.</p>{% endif %}
+   </div>
+   {% endfor %}
+   <h2 class="checkout-address-title">Payment method</h2>
+   <label class="checkout-payment" for="payCod">
+    <input type="radio" id="payCod" name="payment_method" value="cod" checked>
+    <span class="checkout-payment-icon" aria-hidden="true"><i class="bi bi-cash-coin"></i></span>
+    <span class="checkout-payment-text"><strong>Cash on Delivery</strong><small>Pay in cash when your order arrives.</small></span>
+   </label>
+   <p class="checkout-payment-note">Cash on Delivery is the only payment method available right now. No online payment is collected.</p>
+   <p class="checkout-intro">Your order will be sent to the store for confirmation.</p>
+   <button class="checkout-save" type="submit">Place order <span aria-hidden="true">→</span></button>
+  </form>
+ </div>
+</section>
+<script src="{% static 'js/checkout-customer.js' %}?v=1"></script>
+{% endblock %}
+{% block footer %}{% endblock %}
